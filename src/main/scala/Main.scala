@@ -16,7 +16,7 @@ object Main extends Serializable{
         val conf = new SparkConf().setAppName("DBScan").setMaster("local[" + n_threads + "]")
         val sc = new SparkContext(conf)
 
-        var input = sc.textFile(dataset_path) // file PATH must be passed by parameter
+        var input = sc.textFile(dataset_path)
 
         val header = input.first()
         input = input.filter(row => row != header)
@@ -28,13 +28,12 @@ object Main extends Serializable{
         )
 
         val eps = epsilon
-        val minPoints = 4
+        val minPoints = 4 // 2 * num_features
         val maxPointsPerPartition = data.count()
-//        val dbscanModelTest = DBSCAN.train(data,eps, minPoints, maxPointsPerPartition.toInt)
         val dbscanModelWithBenchmark = Benchmark time DBSCAN.train(data,eps, minPoints, maxPointsPerPartition.toInt)
         val dbscanModel = dbscanModelWithBenchmark._1
-        val executionTime = dbscanModelWithBenchmark._2
-        println("execution time: " + executionTime)
+        val executionTimeSec = dbscanModelWithBenchmark._2
+        println("execution time sec: " + executionTimeSec)
 
         val testOutput =  dbscanModel.labeledPoints.map(p =>  s"${p.x},${p.y},${p.cluster}")
         val o = testOutput.collect
