@@ -4,7 +4,6 @@ import dbscan.LabeledPoint._
 import org.apache.spark.internal.Logging
 
 import scala.collection.mutable
-import scala.collection.parallel.CollectionConverters.ArrayIsParallelizable
 import scala.collection.parallel.mutable.ParArray
 /**
  * A naive implementation of DBSCAN. It has O(n2) complexity
@@ -12,15 +11,13 @@ import scala.collection.parallel.mutable.ParArray
  * by the parallel version of DBSCAN.
  *
  */
-
-// TODO: fix out of bound and out of memory errors
 class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
 
   val minDistanceSquared: Double = eps * eps
 
-  def samplePoint: ParArray[LabeledPoint] = ParArray(new LabeledPoint(ParArray(0D, 0D)))
+  def samplePoint: Array[LabeledPoint] = Array(new LabeledPoint(ParArray(0D, 0D)))
 
-  def fit(points: Iterable[Point]): ParArray[LabeledPoint] = {
+  def fit(points: Iterable[Point]): Iterable[LabeledPoint] = {
 
     logInfo(s"About to start fitting")
 
@@ -49,20 +46,20 @@ class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
 
     logInfo(s"found: $totalClusters clusters")
 
-    labeledPoints
+    labeledPoints.toList
 
   }
 
   private def findNeighbors(
                              point: Point,
-                             all: ParArray[LabeledPoint]): ParArray[LabeledPoint] =
-    all.filter(other => {
+                             all: ParArray[LabeledPoint]): Iterable[LabeledPoint] =
+    all.view.filter(other => {
       point.distanceSquared(other) <= minDistanceSquared
     })
 
   def expandCluster(
                      point: LabeledPoint,
-                     neighbors: ParArray[LabeledPoint],
+                     neighbors: Iterable[LabeledPoint],
                      all: ParArray[LabeledPoint],
                      cluster: Int): Unit = {
 

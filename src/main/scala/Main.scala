@@ -1,8 +1,6 @@
 import dbscan.{Benchmark, DBSCAN}
 import org.apache.spark.{SparkConf, SparkContext}
 
-import scala.collection.parallel.CollectionConverters._
-
 
 object Main extends Serializable{
 

@@ -52,12 +52,12 @@ class DBSCAN private (
     // generate the smallest rectangles that split the space
     // and count how many points are contained in each one of them
     val minimumRectanglesWithCount =
-      data
-        .map(toMinimumBoundingRectangle)
-        .map((_, 1))
-        .aggregateByKey(0)(_ + _, _ + _)
-        .collect()
-        .toSet
+    data
+      .map(toMinimumBoundingRectangle)
+      .map((_, 1))
+      .aggregateByKey(0)(_ + _, _ + _)
+      .collect()
+      .toSet
 
     val localPartitions = Partitioner
       .partition(minimumRectanglesWithCount, maxPointsPerPartition, minimumRectangleSize)
@@ -71,19 +71,19 @@ class DBSCAN private (
 
     val margins = data.context.broadcast(localMargins)
 
-  /**
-      for {
+    /**
+    for {
       x <- xs
       y <- ys
       if cond
     } yield (x, y)
 
     xs.flatMap(ys.withFilter(y => cond).map(y => (x, y)))
-  **/
+     **/
 
     val x = data.map(p => Point(p)).flatMap(point => margins.value.filter(y => y._1._3.contains(point)).map(r => (r._2,point))) //it's equivalent to the for-if-yeld below
 
-// assign each point to its proper partition
+    // assign each point to its proper partition
     val duplicated = for {
       point <- data.map(Point)
       ((inner, main, outer), id) <- margins.value
@@ -136,8 +136,8 @@ class DBSCAN private (
     //var tst = readLine()
     //mergePoints foreach println
     //mergePoints.foreach(a => println("osservazione: " + a._1 + " --- point: " + a._2.foreach(b => println("point cl: " + b._1 +
-      //                                                    " lbl point: " + b._2.vector.mkString(" - ") + " -- flag: " +
-        //                                                  b._2.flag + " -- cluster: " + b._2.cluster + " -- visited: " + b._2.visited))))
+    //                                                    " lbl point: " + b._2.vector.mkString(" - ") + " -- flag: " +
+    //                                                  b._2.flag + " -- cluster: " + b._2.cluster + " -- visited: " + b._2.visited))))
     //adjacencies.foreach(a => println("a._1._1: " + a._1._1 + " -- a._1._2: " + a._1._2 + " -- a._2._1: " + a._2._1 + " -- a._2._2: " + a._2._2))
     //adjacencies foreach println
     //println()
@@ -306,4 +306,3 @@ class DBSCAN private (
     if (p < 0) p - minimumRectangleSize else p
 
 }
-
