@@ -52,14 +52,15 @@ class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
 
   private def findNeighbors(
                              point: Point,
-                             all: ParArray[LabeledPoint]): Iterable[LabeledPoint] =
-    all.view.filter(other => {
+                             all: ParArray[LabeledPoint]): ParArray[LabeledPoint] = {
+    all.filter(other => {
       point.distanceSquared(other) <= minDistanceSquared
-    })
+    })//.toList
+  }
 
   def expandCluster(
                      point: LabeledPoint,
-                     neighbors: Iterable[LabeledPoint],
+                     neighbors: ParArray[LabeledPoint],
                      all: ParArray[LabeledPoint],
                      cluster: Int): Unit = {
 
@@ -67,20 +68,22 @@ class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
     point.cluster = cluster
 
     val allNeighbors = mutable.Queue(neighbors)
+    val allNeighPar = allNeighbors.map(x => x.toArray.par)
 
-    while (allNeighbors.nonEmpty) {
+    while (allNeighPar.nonEmpty) {
 
-      allNeighbors.dequeue().foreach(neighbor => {
+      allNeighPar.dequeue().foreach(neighbor => {
         if (!neighbor.visited) {
 
           neighbor.visited = true
           neighbor.cluster = cluster
 
           val neighborNeighbors = findNeighbors(neighbor, all)
+          val newNeigh = neighborNeighbors.toArray.par
 
-          if (neighborNeighbors.size >= minPoints) {
+          if (newNeigh.size >= minPoints) {
             neighbor.flag = Flag.Core
-            allNeighbors.enqueue(neighborNeighbors)
+            allNeighbors.enqueue(newNeigh)
           } else {
             neighbor.flag = Flag.Border
           }
