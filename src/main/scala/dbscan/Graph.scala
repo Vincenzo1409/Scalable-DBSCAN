@@ -4,22 +4,15 @@ import scala.annotation.tailrec
 
 object Graph {
 
-  /**
-   * Create an empty graph
-   */
+  //Create an empty graph
   def apply[T](): Graph[T] = new Graph(Map[T, Set[T]]())
 
 }
 
-/**
- * An immutable unweighted graph with vertexes and edges
- */
+//Unweighted graph with vertexes and edges
 class Graph[T] private (nodes: Map[T, Set[T]]) extends Serializable {
 
-  /**
-   * Add the given vertex `v` to the graph
-   *
-   */
+  //Add a given vertex v to the graph
   def addVertex(v: T): Graph[T] = {
     nodes.get(v) match {
       case None    => new Graph(nodes + (v -> Set()))
@@ -27,9 +20,8 @@ class Graph[T] private (nodes: Map[T, Set[T]]) extends Serializable {
     }
   }
 
-  /**
-   * Insert an edge from `from` to `to`
-   */
+
+  //Insert an edge from `from` to `to`
   def insertEdge(from: T, to: T): Graph[T] = {
     nodes.get(from) match {
       case None       => new Graph(nodes + (from -> Set(to)))
@@ -37,21 +29,17 @@ class Graph[T] private (nodes: Map[T, Set[T]]) extends Serializable {
     }
   }
 
-  /**
-   * Insert a vertex from `one` to `another`, and from `another` to `one`
-   *
-   */
+  //Insert a vertex from `one` to `another`, and from `another` to `one`
   def connect(one: T, another: T): Graph[T] = {
     insertEdge(one, another).insertEdge(another, one)
   }
 
-  /**
-   * Find all vertexes that are reachable from `from`
-   */
+  // Find all vertexes that are reachable from `from`
   def getConnected(from: T): Set[T] = {
     getAdjacent(Set(from), Set[T](), Set[T]()) - from
   }
 
+  // optimized tailrec function to find andjacent points
   @tailrec
   private def getAdjacent(tovisit: Set[T], visited: Set[T], adjacent: Set[T]): Set[T] = {
 

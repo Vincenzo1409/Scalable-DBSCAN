@@ -15,11 +15,11 @@ class LabeledPoint(vector: ParArray[Double]) extends Point(vector) {
 
   def this(point: Point) = this(point.vector)
 
-  var flag = LabeledPoint.Flag.NotFlagged
-  var cluster = LabeledPoint.Unknown
+  var flag: LabeledPoint.Flag.Value = LabeledPoint.Flag.NotFlagged
+  var cluster: Int = LabeledPoint.Unknown
   var visited = false
 
-  override def toString(): String = {
+  override def toString: String = {
     s"$vector,$cluster,$flag"
   }
 

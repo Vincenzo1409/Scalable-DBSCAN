@@ -3,17 +3,16 @@ package dbscan
 import scala.annotation.tailrec
 import org.apache.spark.internal.Logging
 
-import scala.math.BigDecimal.double2bigDecimal
 
 /**
- * Helper methods for calling the partitioner
+ * Partitioner object which is used to create rectangle boxes
  */
 object Partitioner {
 
   def partition(
-                 toSplit: Set[(Rectangle, Int)], // insieme
-                 maxPointsPerPartition: Long, // 10
-                 minimumRectangleSize: Double) /* 4 */: List[(Rectangle, Int)] = {
+                 toSplit: Set[(Rectangle, Int)],
+                 maxPointsPerPartition: Long,
+                 minimumRectangleSize: Double): List[(Rectangle, Int)] = {
     new Partitioner(maxPointsPerPartition, minimumRectangleSize)
       .findPartitions(toSplit)
   }
@@ -21,8 +20,8 @@ object Partitioner {
 }
 
 class Partitioner(
-                            maxPointsPerPartition: Long,
-                            minimumRectangleSize: Double) extends Logging {
+                   maxPointsPerPartition: Long,
+                   minimumRectangleSize: Double) extends Logging {
 
   type RectangleWithCount = (Rectangle, Int)
 
@@ -48,19 +47,16 @@ class Partitioner(
                          pointsIn: (Rectangle) => Int): List[RectangleWithCount] = {
 
     remaining match {
-      case (rectangle, count) :: rest =>  // (rectangle, count) è la testa della lista (primo elemento), mentre rest è la coda (è una lista)
+      case (rectangle, count) :: rest =>  // (rectangle, count) it's the head of the list (first element), rest it's the tail (it's a list too)
         if (count > maxPointsPerPartition) {
           if (canBeSplit(rectangle)) {
-            logTrace(s"About to split: $rectangle")
             def cost = (r: Rectangle) => ((pointsIn(rectangle) / 2) - pointsIn(r)).abs
             val (split1, split2) = split(rectangle, cost)
-            logTrace(s"Found split: $split1, $split2")
             val s1 = (split1, pointsIn(split1))
             val s2 = (split2, pointsIn(split2))
             partition(s1 :: s2 :: rest, partitioned, pointsIn)
 
           } else {
-            logWarning(s"Can't split: ($rectangle -> $count) (maxSize: $maxPointsPerPartition)")
             partition(rest, (rectangle, count) :: partitioned, pointsIn)
           }
 
@@ -96,7 +92,7 @@ class Partitioner(
   }
 
   /**
-   * Returns the box that covers the space inside boundary that is not covered by box
+   * Returns the box which covers the space inside boundary that is not covered by the box
    */
   private def complement(box: Rectangle, boundary: Rectangle): Rectangle =
     if (box.x == boundary.x && box.y == boundary.y) {
@@ -127,8 +123,6 @@ class Partitioner(
     val splits =
       xSplits.map(x => Rectangle(box.x, box.y, x.toDouble, box.y2)) ++
         ySplits.map(y => Rectangle(box.x, box.y, box.x2, y.toDouble))
-
-    logTrace(s"Possible splits: $splits")
 
     splits.toSet
   }

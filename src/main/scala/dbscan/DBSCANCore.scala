@@ -5,12 +5,8 @@ import org.apache.spark.internal.Logging
 
 import scala.collection.mutable
 import scala.collection.parallel.mutable.ParArray
-/**
- * A naive implementation of DBSCAN. It has O(n2) complexity
- * but uses no extra memory. This implementation is not used
- * by the parallel version of DBSCAN.
- *
- */
+
+
 class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
 
   val minDistanceSquared: Double = eps * eps
@@ -18,8 +14,6 @@ class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
   def samplePoint: Array[LabeledPoint] = Array(new LabeledPoint(ParArray(0D, 0D)))
 
   def fit(points: Iterable[Point]): Iterable[LabeledPoint] = {
-
-    logInfo(s"About to start fitting")
 
     val labeledPoints = points.map { new LabeledPoint(_) }.toArray.par
 
@@ -50,14 +44,16 @@ class DBSCANCore(eps: Double, minPoints: Int) extends Logging {
 
   }
 
+  // find neighbours using euclidean distance
   private def findNeighbors(
                              point: Point,
                              all: ParArray[LabeledPoint]): ParArray[LabeledPoint] = {
     all.filter(other => {
       point.distanceSquared(other) <= minDistanceSquared
-    })//.toList
+    })
   }
 
+  //expand partition to then get intersections
   def expandCluster(
                      point: LabeledPoint,
                      neighbors: ParArray[LabeledPoint],
