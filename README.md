@@ -57,3 +57,30 @@ Le performance ottenute sul Cloud non sono del tutto migliori di quelle misurate
 Dai risultati ottenuti si evince che il sistema sia riuscito ad effettuare l'operazione di clustering in maniera corretta,
 riconoscendo quindi i gruppi di appartenenza corretti per ciascun elemento, 
 e le sue performance sono nettamente migliorate rispetto all'implementazione di libreria di DBSCAN.
+
+## Requisiti ed Esecuzione
+Requisiti:
+- Scala 2.12.14
+- Apache Spark 3.1.0
+- Hadoop 3.2
+- Python 3.7.13+ (Google Colab)
+
+Esecuzione: 
+- Scaricare  [Household Electric Power Consuption Dataset](https://www.kaggle.com/uciml/electric-power-consumption-data-set) 
+- Convertire il dataset da .txt a .csv
+- Creare una cartella denominata "preproc_out" sul proprio account Google Drive e fare l'upload del dataset appena scaricato al suo interno
+- Aprire il notebook Google Colab al seguente [link](https://colab.research.google.com/drive/1E_QJMsbXoVeEupGUB3vLZ28tWC1qybqQ#scrollTo=kfKXKjYkEWdF) per generare le diverse partizioni del dataset utilizzate
+- Eseguire l'algoritmo mKNN per ottenere il valore di epsilon ottimale da fornire a Scalable-DBSCAN (facoltativo in quanto già calcolati)
+- Creare il file .jar relativo al progetto eseguendo il comando "package" nella shell di scala, posizionandosi all'interno della root del progetto
+- Eseguire il file .jar appena generato fornendo in input i seguenti parametri nell'ordine di seguito specificato (nel caso di esecuzione su cloud considerare il path relativo al file system dello storage del servizio cloud utilizzato): 
+-- path del dataset in input
+-- path file di output
+-- numero di thread 
+-- valore di epsilon
+
+
+Esecuzione su cloud:
+- Creare un bucket che contenga i file di input e di output e il file jar 
+- Creare i cluster su cui si desidera testare l'esecuzione settandoli con numero arbitrario di master e nodi
+- Crere il job dove si specifica il cluster, il path del jar e i parametri in input
+ - Avviare l'esecuzione del cluster e del job 
