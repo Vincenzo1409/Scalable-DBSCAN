@@ -69,7 +69,7 @@ Esecuzione:
 - Scaricare  [Household Electric Power Consuption Dataset](https://www.kaggle.com/uciml/electric-power-consumption-data-set) 
 - Convertire il dataset da .txt a .csv
 - Creare una cartella denominata "preproc_out" sul proprio account Google Drive e fare l'upload del dataset appena scaricato al suo interno
-- Aprire il notebook Google Colab al seguente [link](https://colab.research.google.com/drive/1E_QJMsbXoVeEupGUB3vLZ28tWC1qybqQ#scrollTo=kfKXKjYkEWdF) per generare le diverse partizioni del dataset utilizzate
+- Aprire il notebook Google Colab al seguente [link](https://colab.research.google.com/drive/1NeG-54eeXwZFZlZaKVVmWIrYQixdoYxM) per generare le diverse partizioni del dataset utilizzate
 - Eseguire l'algoritmo mKNN per ottenere il valore di epsilon ottimale da fornire a Scalable-DBSCAN (facoltativo in quanto già calcolati)
 - Creare il file .jar relativo al progetto eseguendo il comando "package" nella shell di scala, posizionandosi all'interno della root del progetto
 - Eseguire il file .jar appena generato fornendo in input i seguenti parametri nell'ordine di seguito specificato (nel caso di esecuzione su cloud considerare il path relativo al file system dello storage del servizio cloud utilizzato): 
