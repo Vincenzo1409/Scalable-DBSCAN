@@ -73,10 +73,10 @@ Esecuzione:
 - Eseguire l'algoritmo mKNN per ottenere il valore di epsilon ottimale da fornire a Scalable-DBSCAN (facoltativo in quanto già calcolati)
 - Creare il file .jar relativo al progetto eseguendo il comando "package" nella shell di scala, posizionandosi all'interno della root del progetto
 - Eseguire il file .jar appena generato fornendo in input i seguenti parametri nell'ordine di seguito specificato (nel caso di esecuzione su cloud considerare il path relativo al file system dello storage del servizio cloud utilizzato): 
- - path del dataset in input
- - path file di output
- - numero di thread 
- - valore di epsilon
+  - path del dataset in input
+  - path file di output
+  - numero di thread 
+  - valore di epsilon
 
 
 Esecuzione su cloud:
