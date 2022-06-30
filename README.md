@@ -6,7 +6,7 @@
 ## Introduzione
 
 Il progetto proposto è incentrato su DBSCAN, un algoritmo di clustering proposto
-da Martin Ester, Hans-Peter Kriegel, J ̈org Sander e Xiaowei Xu nel 1996.
+da Martin Ester, Hans-Peter Kriegel, Sander e Xiaowei Xu nel 1996.
 
 Tramite il linguaggio Scala, affiancato dal framework per il calcolo distribuito Apache Spark,
 è stata implementata una versione parallela e distribuita dell'algoritmo sopracitato sulla quale è stato 
