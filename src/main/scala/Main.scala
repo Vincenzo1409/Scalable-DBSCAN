@@ -30,7 +30,7 @@ object Main extends Serializable{
         val maxPointsPerPartition = data.count()
 
         //evaluate DBSCAN computational time
-        val dbscanModelWithBenchmark = Benchmark time DBSCAN.train(data,eps, minPoints, maxPointsPerPartition.toInt)
+        lazy val dbscanModelWithBenchmark = Benchmark time DBSCAN.train(data,eps, minPoints, maxPointsPerPartition.toInt)
 
         val dbscanModel = dbscanModelWithBenchmark._1
         val executionTimeSec = dbscanModelWithBenchmark._2
